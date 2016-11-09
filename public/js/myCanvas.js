@@ -66,8 +66,15 @@ draw_graph.prototype.clearContext = function() {
     this.context.clearRect(0, 0,this.canvas.width,this.canvas.height);
 }
 
+//设置画笔颜色
+draw_graph.prototype.setLineColor = function (color) {
+    this.lineColor = color;
+}
 
-
+// 设置画板粗细
+draw_graph.prototype.setLineSize = function (size) {
+    this.lineSize = size;
+}
 
 draw_graph.prototype.copyimage = function () {
     var img_png_src = canvas.toDataURL("image/png");  //将画板保存为图片格式的函数

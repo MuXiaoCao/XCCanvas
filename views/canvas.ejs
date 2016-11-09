@@ -8,8 +8,7 @@
 
     <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="js/myCanvas.js"></script>
-    <!--<script type="text/javascript" src="js/mySocket.js"></script>-->
-
+    <script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8" charset="gb2312"></script>       <!--获取接口数据，注意charset -->
     <!--[if lte IE 8]>
     <style>.main {
         display: none;
@@ -18,99 +17,47 @@
     .support-note .note-ie {
         display: block;
     }</style><![endif]-->
+
 </head>
+
 
 <body id="body">
 
 
 <div>
-    <h1><%= title %></h1>
+    <h1><%= title %> <span id="count"></span></h1>
     <h1>聊天：<b><span id="time"></span></b></h1>
     <p>Welcome to <%= title %></p>
     <input type="text" id="sendData"/>
     <button onclick="sendMyData()">发送</button>
 </div>
 <br/>
+<button onclick="applyDraw();">申请画图</button>
+<br/>
 <canvas id="canvas" width="600" height="300" style="background: #111;">
     浏览器不支持哦，亲
 </canvas>
 <br/>
-<button style="width:80px;background-color:yellow;" onclick='myCanvas.lineColor="yellow";'>YELLOW</button>
-<button style="width:80px ;background-color:red;" onclick='myCanvas.lineColor="red";'>RED</button>
-<button style="width:80px ;background-color:blue;" onclick='myCanvas.lineColor="blue";'>BLUE</button>
-<button style="width:80px ;background-color:green;" onclick='myCanvas.lineColor="green";'>GREEN</button>
-<button style="width:80px ;background-color:white;" onclick='myCanvas.lineColor="white";'>WHITE</button>
-<button style="width:80px ;background-color:black;" onclick='myCanvas.lineColor="black";'>BLACK</button>
+<button style="width:80px;background-color:yellow;" onclick='setLineColor("yellow");'>YELLOW</button>
+<button style="width:80px ;background-color:red;" onclick='setLineColor("red");'>RED</button>
+<button style="width:80px ;background-color:blue;" onclick='setLineColor("blue");'>BLUE</button>
+<button style="width:80px ;background-color:green;" onclick='setLineColor("green");'>GREEN</button>
+<button style="width:80px ;background-color:white;" onclick='setLineColor("white");'>WHITE</button>
+<button style="width:80px ;background-color:black;" onclick='setLineColor("black");'>BLACK</button>
 <br/>
 
-<button style="width: 80px;background-color: white;" onclick="myCanvas.lineSize=4;">4PX</button>
-<button style="width: 80px;background-color: white;" onclick="myCanvas.lineSize=8;">8PX</button>
-<button style="width: 80px;background-color: white;" onclick="myCanvas.lineSize=16;">16PX</button>
+<button style="width: 80px;background-color: white;" onclick="setLineSize(4);">4PX</button>
+<button style="width: 80px;background-color: white;" onclick="setLineSize(8);">8PX</button>
+<button style="width: 80px;background-color: white;" onclick="setLineSize(16);">16PX</button>
 <br/>
 
 <button style="width: 80px;background-color: white;" onclick="myCanvas.copyimage();">EXPORT</button>
+<button style="width: 80px;background-color: white;" onclick="clearCanvas();">CLEAR</button>
 
 <br/>
 <img src="" id="image_png" width="600px" height="300px">
 <br/>
 
-<script type="text/javascript">
-    var socket = io.connect();
-
-    var canvas = document.getElementById("canvas");
-    var context = canvas.getContext("2d");
-    var myCanvas = new draw_graph('pencil',canvas,context);
-    socket.on('message',function(data) {
-        if (data.mousedown) {
-            myCanvas.mousedown(data.mousedown);
-        } else if(data.mousemove) {
-            myCanvas.mousemove(data.mousemove);
-        } else if(data.mouseup) {
-            myCanvas.mouseup(data.mouseup);
-        } else if(data.mouseout) {
-            myCanvas.mouseout(data.mouseout);
-        }
-        if (data.data) {
-            document.getElementById('time').innerHTML = data.data;
-        }
-    });
-
-    function sendMyData() {
-        var sendData = document.getElementById('sendData').value;
-        socket.send({data: sendData});
-    }
-</script>
-<script type="text/javascript">
-    var socket = io.connect();
-    var canvas_bak = document.getElementById("canvas");
-    var canvasLeft = canvas_bak.offsetLeft;
-    var canvasTop = canvas_bak.offsetTop;
-    $(canvas_bak).unbind();
-    $(canvas_bak).bind('mousedown',function (e) {
-        socket.send({'mousedown':{
-            clientX:e.pageX ,
-            clientY:e.pageY
-        }});
-    });
-    $(canvas_bak).bind('mousemove',function (e) {
-        socket.send({'mousemove':{
-            clientX:e.pageX ,
-            clientY:e.pageY
-        }});
-
-    });
-    $(canvas_bak).bind('mouseup',function (e) {
-        socket.send({'mouseup':{
-            clientX:e.pageX ,
-            clientY:e.pageY
-        }});
-    });
-    /*$(canvas_bak).bind('mouseout',function (e) {
-        socket.send({'mouseout':{
-            clientX:e.pageX ,
-            clientY:e.pageY
-        }});
-    });*/
-</script>
 </body>
+<script type="text/javascript" src="js/mySocket.js"></script>
 </html>
