@@ -81,7 +81,7 @@ function tick() {
                 if(!drawID) {
                     if (message.applyDraw.clientId) {
                         // 当前没有持有用户，则直接同意
-                        setDrawUser(message.applyDraw.clientId,socket);
+                        setDrawUser(message.applyDraw.clientId,socket.id,socket);
                     }
                 }else {
                     // 当前有持有用户，则需要询问持有用户是否同意
@@ -91,6 +91,7 @@ function tick() {
                         applyId = message.applyDraw.clientId;
                         applyUserId = socket.id;
                         try {
+                            console.log(drawUserId);
                             io.sockets.sockets[drawUserId].send({'applyDraw':applyUserId});
                         }catch(e) {
                             console.log(e);
@@ -115,11 +116,11 @@ function tick() {
 }
 tick();
 
-function setDrawUser(uuid,socket) {
+function setDrawUser(uuid,socketId,socket) {
     drawID = uuid;
-    drawUserId = socket.id;
+    drawUserId = socketId;
     try {
-        socket.broadcast.send({drawUser:socket.id});
+        socket.broadcast.send({drawUser:socketId});
     }catch(e) {
 
     }
