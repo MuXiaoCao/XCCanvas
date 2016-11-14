@@ -21,7 +21,7 @@
 </head>
 
 
-<body id="body">
+<body id="body" onunload="exit()">
 
 
 <div>
@@ -33,6 +33,7 @@
 </div>
 <br/>
 <button onclick="applyDraw();">申请画图</button>
+<button onclick="exit();">退出</button>
 <br/>
 <canvas id="canvas" width="600" height="300" style="background: #111;">
     浏览器不支持哦，亲

@@ -59,20 +59,28 @@ function tick() {
 
 
         //监听用户退出
-        socket.on('disconnect', function(){
+        socket.on('logout', function(message){
+            console.log(message);
             //将退出的用户从在线列表中删除
-            if(onlineUsers.hasOwnProperty(socket.name)) {
+            if(onlineUsers.hasOwnProperty(message.userId)) {
                 //退出用户的信息
-                var obj = {userId:socket.name, username:onlineUsers[socket.name]};
+                var obj = {userId:message.userId, userName:onlineUsers[message.userId]};
 
                 //删除
-                delete onlineUsers[socket.name];
+                delete onlineUsers[message.userId];
                 //在线人数-1
                 onlineCount--;
 
                 //向所有客户端广播用户退出
                 io.emit('logout', {onlineUsers:onlineUsers, onlineCount:onlineCount, user:obj});
-                console.log(obj.username+'退出了聊天室');
+
+                if(drawID != null && message.userId == drawID) {
+                    // 重置画板
+                    drawID = null;
+                    drawUserId = null;
+                }
+
+                console.log(obj.userName+'退出了聊天室');
             }
         });
         socket.on('message',function (message) {
@@ -111,7 +119,8 @@ function tick() {
                 }
             }
             console.log(message);
-        })
+        });
+
     });
 }
 tick();

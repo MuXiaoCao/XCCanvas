@@ -27,6 +27,7 @@ socket.on('message',function(data) {
         document.getElementById('time').innerHTML = data.data;
     }
     if (data.lineColor) {
+        console.log(data.lineColor);
         myCanvas.setLineColor(data.lineColor.color);
     }
     if (data.lineSize) {
@@ -116,7 +117,7 @@ function setLineColor(color) {
     myCanvas.lineColor = color;
     SendSocket.send({'lineColor':{
         color: color
-    }});
+    }, 'clientId': id});
 }
 
 function setLineSize(size) {
@@ -126,7 +127,7 @@ function setLineSize(size) {
     myCanvas.lineSize = size;
     SendSocket.send({'lineSize':{
         size: size
-    }});
+    }, 'clientId': id});
 }
 
 function clearCanvas() {
@@ -141,12 +142,21 @@ function applyDraw() {
         clientId:id
     }});
 }
-
+// 同意申请画笔
 function agreeApply(socketId){
     SendSocket.send({'clientSuccessApply':{
         socketId:socketId
     }});
 }
+// 退出登录
+function exit() {
+    socket.emit('logout', {userId: id, userName: returnCitySN["cip"]});
+    SendSocket.emit('logout', {userId: id, userName: returnCitySN["cip"]});
+    SendSocket.disconnect();
+    socket.disconnect();
+    document.getElementById('time').innerHTML = "您已退出聊天室";
+    document.getElementById('count').innerHTML = "当前在线人数为：" + 0;
+};
 
 function getUUID() {
     var s = [];
