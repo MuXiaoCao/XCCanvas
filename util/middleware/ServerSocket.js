@@ -48,10 +48,11 @@ ServerSocket.init = function (io) {
          * 此message分为四种
          * 1. 申请持笔
          * 2. 同意持笔申请
-         * 3. 发送聊天消息
-         * 4. 发送画图信息
+         * 3. 接收聊天消息
+         * 4. 接收画图信息
          * message格式如下：
          * {
+         *      code:信息编号，
          *      info:个人信息，
          *      data:具体数据
          * }
