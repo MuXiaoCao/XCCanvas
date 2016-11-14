@@ -9,6 +9,7 @@ var debug = require('debug')('fanglvCRM:server');
 var http = require('http');
 
 var myMap = require('../util/MapUtil');
+
 /**
  * Get port from environment and store in Express.
  */
@@ -22,21 +23,9 @@ app.set('port', port);
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
+var ServerSocket = require('../util/middleware/ServerSocket');
 
-// 持有标志
-var drawID;
-// 持有用户id
-var drawUserId;
-// 申请标志
-var applyId;
-// 申请用户id
-var applyUserId;
-//在线用户
-var onlineUsers = {};
-var onlineCount = 0;
-
-function tick() {
-    io.sockets.on('connection',function(socket) {
+    /*io.sockets.on('connection',function(socket) {
 
         console.log('连接成功');
         socket.emit("message",{socketId:socket.id});
@@ -48,8 +37,8 @@ function tick() {
             //检查在线列表，如果不在里面就加入
             if(!onlineUsers.hasOwnProperty(message.userId)) {
                 onlineUsers[message.userId] = message.userName;
-                //在线人数+1
                 onlineCount++;
+                //在线人数+1
             }
 
             //向所有客户端广播用户加入
@@ -121,20 +110,9 @@ function tick() {
             console.log(message);
         });
 
-    });
-}
-tick();
+    });*/
+ServerSocket.init(io);
 
-function setDrawUser(uuid,socketId,socket) {
-    drawID = uuid;
-    drawUserId = socketId;
-    try {
-        socket.broadcast.send({drawUser:socketId});
-    }catch(e) {
-
-    }
-
-}
 
 //setInterval(tick,1000);
 /**

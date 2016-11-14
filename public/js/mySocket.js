@@ -44,6 +44,7 @@ socket.on('message',function(data) {
 // 发送聊天消息
 function sendMyData() {
     var sendData = document.getElementById('sendData').value;
+    document.getElementById('time').innerHTML = sendData;
     socket.send({data: sendData});
 }
 
