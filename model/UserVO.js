@@ -13,7 +13,7 @@ function UserVO(user) {
     this.userName = user.userName;
 }
 UserVO.parseUser = function (user,socket) {
-    if (!user.userId || !user.userName) {
+    if (!user.hasOwnProperty('userId') || !user.hasOwnProperty('userName')) {
         return message.parseUser.error;
     }else {
         user.socketId = socket.id;
@@ -27,11 +27,13 @@ UserVO.check = function () {
     return false;
 }
 UserVO.initUser = function () {
-    this.userId = null;
-    this.socketId = null;
-    this.userName = null;
+    return new UserVO({
+        userId:'-1',
+        userName:'-1',
+        socketId:'-1'
+    });
 }
-UserVO.checkUserId = function (user) {
+UserVO.prototype.checkUserId = function (user) {
     return this.userId == user.userId;
 }
 module.exports = UserVO;

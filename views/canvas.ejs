@@ -7,7 +7,6 @@
     <script type="text/javascript" src="/socket.io/socket.io.js" ></script>
 
     <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="js/myCanvas.js"></script>
     <script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8" charset="gb2312"></script>       <!--获取接口数据，注意charset -->
     <!--[if lte IE 8]>
     <style>.main {
@@ -25,8 +24,8 @@
 
 
 <div>
-    <h1><%= title %> <span id="count"></span></h1>
-    <h1>聊天：<b><span id="time"></span></b></h1>
+    <h1><%= title %> <span id="xcCount"></span></h1>
+    <h1>聊天：<b><span id="xcChat"></span></b></h1>
     <p>Welcome to <%= title %></p>
     <input type="text" id="sendData"/>
     <button onclick="sendMyData()">发送</button>
@@ -35,7 +34,7 @@
 <button onclick="applyDraw();">申请画图</button>
 <button onclick="exit();">退出</button>
 <br/>
-<canvas id="canvas" width="600" height="300" style="background: #111;">
+<canvas id="xcCanvas" width="600" height="300" style="background: #111;">
     浏览器不支持哦，亲
 </canvas>
 <br/>
@@ -52,7 +51,7 @@
 <button style="width: 80px;background-color: white;" onclick="setLineSize(16);">16PX</button>
 <br/>
 
-<button style="width: 80px;background-color: white;" onclick="myCanvas.copyimage();">EXPORT</button>
+<button style="width: 80px;background-color: white;" onclick="drawExport();">EXPORT</button>
 <button style="width: 80px;background-color: white;" onclick="clearCanvas();">CLEAR</button>
 
 <br/>
@@ -60,5 +59,7 @@
 <br/>
 
 </body>
-<script type="text/javascript" src="js/mySocket.js"></script>
+<script type="text/javascript" src="js/myCanvas.js"></script>
+<script type="text/javascript" src="js/ClientSocket.js"></script>
+<script type="text/javascript" src="js/SocketBase.js"></script>
 </html>

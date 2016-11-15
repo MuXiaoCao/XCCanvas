@@ -2,33 +2,115 @@
  * Created by muxiaocao on 2016/11/14.
  */
 
-var SocketClient = function (canvas,context) {
-    // socket通信
-    var socket = io.connect();
-    // 画板
-    var canvas = canvas;
-    // 画布
-    var context = context;
-    // 画板基础类
-    var myCanvas = new draw_graph('pencil',canvas,context);
-    // tokenID，用户唯一标识
-    var id = getUUID();
-    // socketId,客户端与服务端对应识别id
-    var socketId = 0;
-    // 当前持有画笔的用户的id
-    var drawSocketId = -1;
-}
+var socket = io.connect();
+var clientSocket = new ClientSocket(socket,returnCitySN["cip"]);;
+var canvas = document.getElementById("xcCanvas");
 
-function getUUID() {
-    var s = [];
-    var hexDigits = "0123456789abcdef";
-    for (var i = 0; i < 36; i++) {
-        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+socket.emit('login',clientSocket.getSendMessage(Message.MessageType.login.code,null,null));
+
+socket.on('login',function (message) {
+    console.log(message);
+    clientSocket.reciveDate(message);
+});
+socket.on('logout',function (message) {
+    clientSocket.reciveDate(message);
+});
+socket.on('message',function (message) {
+    clientSocket.reciveDate(message);
+});
+
+// 发送聊天消息
+function sendMyData() {
+    var sendData = document.getElementById('sendData').value;
+
+    clientSocket.sendData(Message.MessageType.chatData.code,sendData);
+};
+// 申请持有画笔
+function applyDraw() {
+    clientSocket.sendData(Message.MessageType.applyDraw.code,null);
+};
+
+function setLineColor(color) {
+    if (!color) {
+        return;
     }
-    s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
-    s[8] = s[13] = s[18] = s[23] = "-";
-
-    var uuid = s.join("");
-    return uuid;
+    if(clientSocket.checkDrawUser()) {
+        clientSocket.sendData(Message.MessageType.drawParam.code, {
+            'lineColor': {
+                color: color
+            }
+        });
+    }
 }
+
+function setLineSize(size) {
+    if (!size) {
+        return;
+    }
+    if(clientSocket.checkDrawUser()) {
+        clientSocket.sendData(Message.MessageType.drawParam.code, {
+            'lineSize': {
+                size: size
+            }
+        });
+    }
+}
+
+function clearCanvas() {
+    if(clientSocket.checkDrawUser()) {
+        clientSocket.sendData(Message.MessageType.drawParam.code, {
+            'clearAll': {}
+        });
+    }
+}
+
+function drawExport() {
+    if(clientSocket.checkDrawUser()) {
+        clientSocket.sendData(Message.MessageType.drawExport.code,{
+            'export':{}
+        });
+    }
+}
+
+// 退出登录
+function exit() {
+    if(clientSocket.checkDrawUser()) {
+        clientSocket.sendData(Message.MessageType.logout.code, {
+            nothing: ''
+        });
+    }
+}
+
+
+$(canvas).unbind();
+$(canvas).bind('mousedown',function (e) {
+    if (clientSocket.user.checkDrawUser(clientSocket.drawUser.userId)) {
+        clientSocket.sendData(Message.MessageType.drawData.code, {
+            'mousedown': {
+                clientX: e.pageX,
+                clientY: e.pageY
+            }
+        });
+    }
+});
+$(canvas).bind('mousemove',function (e) {
+    if (clientSocket.user.checkDrawUser(clientSocket.drawUser.userId)) {
+        clientSocket.sendData(Message.MessageType.drawData.code, {
+            'mousemove': {
+                clientX: e.pageX,
+                clientY: e.pageY
+            }
+        });
+    }
+});
+$(canvas).bind('mouseup',function (e) {
+    if (clientSocket.user.checkDrawUser(clientSocket.drawUser.userId)) {
+        clientSocket.sendData(Message.MessageType.drawData.code, {
+            'mouseup': {
+                clientX: e.pageX,
+                clientY: e.pageY
+            }
+        });
+    }
+});
+

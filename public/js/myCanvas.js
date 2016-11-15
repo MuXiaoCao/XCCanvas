@@ -27,14 +27,12 @@ draw_graph.prototype.mousedown = function(e){
     this.canDraw = true;
     if(this.graphType == 'pencil') {
         this.context.beginPath();
-        console.log('down:' + e.clientX + "," + e.clientY);
     }
 };
 //鼠标离开 把蒙版canvas的图片生成到canvas中
 draw_graph.prototype.mouseup = function(e){
     e=e||window.event;
     this.canDraw = false;
-    console.log('up:' + e);
 };
 
 // 鼠标移动
@@ -45,7 +43,6 @@ draw_graph.prototype.mousemove = function(e){
             var x = e.clientX - this.canvasLeft + 10;
             var y = e.clientY - this.canvasTop + 10;
             this.context.lineTo(x, y);
-            console.log("x:" + e.clientX + ", y:" + e.clientY + "; newx:" + x + ", newy:" + y);
             this.context.stroke();
         }
     }
@@ -56,7 +53,6 @@ draw_graph.prototype.mousemove = function(e){
 draw_graph.prototype.mouseout = function(e){
     if(this.graphType != 'handwriting'){
         this.clearContext();
-        console.log('out:' + e);
     }
 }
 
