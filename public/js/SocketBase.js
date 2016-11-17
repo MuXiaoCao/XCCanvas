@@ -74,11 +74,11 @@ function drawExport() {
 
 // 退出登录
 function exit() {
-    if(clientSocket.checkDrawUser()) {
-        clientSocket.sendData(Message.MessageType.logout.code, {
-            nothing: ''
-        });
-    }
+
+    clientSocket.sendData(Message.MessageType.logout.code, {
+        nothing: ''
+    });
+
 }
 
 
