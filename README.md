@@ -16,6 +16,6 @@
 ## 示例：
 
   例子：
-  [http://muxiaocao.cn:3000/canvas](http://muxiaocao.cn:3000/canvas)
+  [http://node.muxiaocao.cn](http://node.muxiaocao.cn)
   
   ![](http://muxiaocao01.oss-cn-shenzhen.aliyuncs.com/github/github_xccanvas.png)
