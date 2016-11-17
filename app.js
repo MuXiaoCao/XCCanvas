@@ -26,12 +26,6 @@ app.use('/', index);
 app.use('/users', users);
 
 
-/*function tick() {
-    var now = new Date().toUTCString();
-    io.sockets.send(now);
-}
-setInterval(tick,1000);*/
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
