@@ -9,7 +9,7 @@ function ServerSocket() {
     
 }
 
-ServerSocket.init = function (io) {
+ServerSocket.init = function (io,session) {
 
     io.sockets.on('connection',function(socket) {
 

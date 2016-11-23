@@ -4,7 +4,13 @@
 var User = function (socketId,userName) {
 
     this.socketId = socketId;
-    this.userId = getUUID();
+    var tmp = $.cookie('xccanvas_userId'); // cookie存在 => 'the_value'
+    if (tmp != null) {
+        this.userId = tmp;
+    }else {
+        this.userId = getUUID();
+        $.cookie('xccanvas_userId', this.userId, { expires: 7, path: 'node.muxiaocao.cn' });
+    }
 
     this.userName = userName;
 };

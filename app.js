@@ -7,8 +7,11 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-
 var app = express();
+
+
+var session = require('express-session');
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,6 +24,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret:'xiaocao',
+  name: 'xc_id', //这里的name值得是cookie的name，默认cookie的name是：connect.sid
+  //设置maxAge是1800000ms，即30min后session和相应的cookie失效过期,如果不设置采用默认的，这会随着会话中断（关闭浏览器）而失效
+  //cookie: {maxAge: -1 },
+  resave: false,
+  saveUninitialized: true
+}));
 
 app.use('/', index);
 app.use('/users', users);

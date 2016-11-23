@@ -8,8 +8,6 @@ var app = require('../app');
 var debug = require('debug')('fanglvCRM:server');
 var http = require('http');
 
-var myMap = require('../util/MapUtil');
-
 /**
  * Get port from environment and store in Express.
  */
@@ -23,94 +21,10 @@ app.set('port', port);
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
+var session = require('express-session');
 var ServerSocket = require('../util/middleware/ServerSocket');
 
-    /*io.sockets.on('connection',function(socket) {
 
-        console.log('连接成功');
-        socket.emit("message",{socketId:socket.id});
-
-        //监听新用户加入
-        socket.on('login', function(message){
-            //将新加入用户的唯一标识当作socket的名称，后面退出的时候会用到
-
-            //检查在线列表，如果不在里面就加入
-            if(!onlineUsers.hasOwnProperty(message.userId)) {
-                onlineUsers[message.userId] = message.userName;
-                onlineCount++;
-                //在线人数+1
-            }
-
-            //向所有客户端广播用户加入
-            io.emit('login', {onlineUsers:onlineUsers, onlineCount:onlineCount, user:message});
-            console.log(message.userName+'加入了聊天室');
-        });
-
-
-        //监听用户退出
-        socket.on('logout', function(message){
-            console.log(message);
-            //将退出的用户从在线列表中删除
-            if(onlineUsers.hasOwnProperty(message.userId)) {
-                //退出用户的信息
-                var obj = {userId:message.userId, userName:onlineUsers[message.userId]};
-
-                //删除
-                delete onlineUsers[message.userId];
-                //在线人数-1
-                onlineCount--;
-
-                //向所有客户端广播用户退出
-                io.emit('logout', {onlineUsers:onlineUsers, onlineCount:onlineCount, user:obj});
-
-                if(drawID != null && message.userId == drawID) {
-                    // 重置画板
-                    drawID = null;
-                    drawUserId = null;
-                }
-
-                console.log(obj.userName+'退出了聊天室');
-            }
-        });
-        socket.on('message',function (message) {
-
-            if (message.applyDraw) {
-                if(!drawID) {
-                    if (message.applyDraw.clientId) {
-                        // 当前没有持有用户，则直接同意
-                        setDrawUser(message.applyDraw.clientId,socket.id,socket);
-                    }
-                }else {
-                    // 当前有持有用户，则需要询问持有用户是否同意
-                    if(message.applyDraw.clientId == drawID) {
-                        console.log( drawID +"已经持有画笔");
-                    }else {
-                        applyId = message.applyDraw.clientId;
-                        applyUserId = socket.id;
-                        try {
-                            console.log(drawUserId);
-                            io.sockets.sockets[drawUserId].send({'applyDraw':applyUserId});
-                        }catch(e) {
-                            console.log(e);
-                        }
-                    }
-                }
-            }else if (message.clientSuccessApply){
-                // 持有用户同意请求
-                setDrawUser(applyId,applyUserId,socket);
-                socket.broadcast.send({drawUser:message.clientSuccessApply.socketId});
-            }else if (message.data) {
-                socket.broadcast.send(message);
-            }else{
-                if(drawID != null && message.clientId == drawID) {
-                    // 发送画图数据
-                    socket.broadcast.send(message);
-                }
-            }
-            console.log(message);
-        });
-
-    });*/
 ServerSocket.init(io);
 
 /**
